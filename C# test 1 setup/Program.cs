@@ -1,5 +1,4 @@
-﻿//Max Martin Math game
-int points = 0;
+﻿int points = 0;
 int currentQuestionnum = 0;
 int totalQuestions = 5;
 string currentQuestion = "";
@@ -7,21 +6,56 @@ int num1 = 0;
 int num2 = 0;
 Random random = new Random();
 int answer = 0;
+List<int> oldGameData = new List<int>();
+int attempts = 0;
 
 Console.WriteLine("Hello are you ready for the game? (yes/no)");
 if (Console.ReadLine().ToLower() == "yes")
 {
     Console.WriteLine("Great! Let's get started.");
     mainMenu();
-
 }
 else
 {
     Console.WriteLine("No worries! Come back when you're ready.");
     return;
 }
-// Main menu function basic change later add more options for requirments hi
+
 void mainMenu()
+{
+    Console.WriteLine("Welcome to the main menu!");
+    Console.WriteLine("Please choose an option:");
+    Console.WriteLine("1. Start a new game");
+    Console.WriteLine("2. View old game data");
+    int choice = Convert.ToInt16(Console.ReadLine());
+    if (choice == 1)
+    {
+        newGame();
+    }
+    else if (choice == 2)
+    {
+        Console.WriteLine("Previous Games History:");
+        if (oldGameData.Count == 0)
+        {
+            Console.WriteLine("No game history found.");
+        }
+        else
+        {
+            for (int i = 0; i < oldGameData.Count; i++)
+            {
+                Console.WriteLine($"Game {i + 1}: {oldGameData[i]} / {totalQuestions} points");
+            }
+        }
+        mainMenu();
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice. Please try again.");
+        mainMenu();
+    }
+}
+
+void newGame()
 {
     Console.WriteLine("Welcome to the game!");
     Console.WriteLine("Pick an operation to practice:");
@@ -38,7 +72,7 @@ void mainMenu()
     else if (operationchoice == 2)
     {
         Console.WriteLine("You chose Subtraction!");
-        startGameSubtraction(); 
+        startGameSubtraction();
     }
     else if (operationchoice == 3)
     {
@@ -55,6 +89,15 @@ void mainMenu()
         Console.WriteLine("Invalid choice. Please try again.");
         mainMenu();
     }
+}
+
+void endGame()
+{
+    attempts++;
+    oldGameData.Add(points);
+    points = 0;
+    currentQuestionnum = 0;
+    mainMenu();
 }
 
 void startGameAddition()
@@ -78,11 +121,11 @@ void startGameAddition()
         {
             Console.WriteLine($"Incorrect! The correct answer is {num1 + num2}");
             Console.WriteLine($"You have {points} points.");
-
         }
     }
-
+    endGame();
 }
+
 void startGameMultiplication()
 {
     while (currentQuestionnum < totalQuestions)
@@ -104,10 +147,9 @@ void startGameMultiplication()
         {
             Console.WriteLine($"Incorrect! The correct answer is {num1 * num2}");
             Console.WriteLine($"You have {points} points.");
-
         }
     }
-
+    endGame();
 }
 
 void startGameSubtraction()
@@ -131,24 +173,24 @@ void startGameSubtraction()
         {
             Console.WriteLine($"Incorrect! The correct answer is {num1 - num2}");
             Console.WriteLine($"You have {points} points.");
-
         }
     }
-
+    endGame();
 }
 
-void startGameDivision()//do the thing for the division game whole numbers only
+void startGameDivision()
 {
     while (currentQuestionnum < totalQuestions)
     {
         currentQuestionnum++;
         Console.WriteLine($"Question {currentQuestionnum}");
-        num1 = random.Next(1, 10);
-        num2 = random.Next(1, 10);
+        num2 = random.Next(1, 11);
+        int quotient = random.Next(0, 11);
+        num1 = num2 * quotient;
         currentQuestion = $"{num1} / {num2} = ?";
         Console.WriteLine(currentQuestion);
         answer = Convert.ToInt16(Console.ReadLine());
-        if (answer == num1 / num2)
+        if (answer == quotient)
         {
             Console.WriteLine("Correct!");
             points++;
@@ -156,11 +198,9 @@ void startGameDivision()//do the thing for the division game whole numbers only
         }
         else
         {
-            Console.WriteLine($"Incorrect! The correct answer is {num1 / num2}");
+            Console.WriteLine($"Incorrect! The correct answer is {quotient}");
             Console.WriteLine($"You have {points} points.");
-
         }
     }
-
+    endGame();
 }
-
